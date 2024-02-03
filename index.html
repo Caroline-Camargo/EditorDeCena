@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--  Meta  -->
+    <meta charset="UTF-8" />
+    <title>Editor de Cena</title>
+
+    <!--  Styles  -->
+    <link rel="stylesheet" href="src/styles/dat.gui.css">
+    <link rel="stylesheet" href="src/styles/index.processed.css">
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <section id="obj">
+        <div id="leftContent"></div>
+        <div id="rightContent">
+            <div class="loadScene">
+                <label for="fileInput">Load Scene</label>
+                <input type="file" id="fileInput" onchange="loadScene()">
+            </div>
+            <button class="saveButton" onclick="saveScene()">Save Scene</button>
+            <button class="backButton" onclick="backButtton()"> < </button>
+            <button class="advanceButton" onclick="advanceButton()"> > </button>
+        </div>
+    </section>    
+
+    <!-- Scripts -->
+    <script src="https://webgl2fundamentals.org/webgl/resources/twgl-full.min.js"></script>
+    <script src="https://webgl2fundamentals.org/webgl/resources/m4.js"></script>
+    <script src="https://webgl2fundamentals.org/webgl/resources/flattened-primitives.js"></script>
+    <script src="src/lib/dat.gui.min.js"></script>
+    <script src="src/js/webgl.js"></script>
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/gui.js"></script>
+    <script src="src/js/script.js"></script>
+    <script src="src/js/loadObjWithMtl.js"></script>
+    
+</body>
+</html>
