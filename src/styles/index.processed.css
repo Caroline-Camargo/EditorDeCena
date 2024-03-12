@@ -71,6 +71,10 @@ button:hover, .loadScene label:hover {
   width: 30px;
 }
 
+.addLight, .addEffect {
+  margin-bottom: 30px;
+}
+
 .loadScene {
   display: inline-block;
   position: relative;
@@ -88,3 +92,4 @@ button:hover, .loadScene label:hover {
   width: 100px;
   text-align: center;
 }
+

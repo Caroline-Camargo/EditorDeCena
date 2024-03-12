@@ -2,10 +2,14 @@ let partsArray = [];
 let objArray = [];
 let historyStack = [];
 let textures;
+let lights = [];
+let effect = true;
 
 async function main() {
   const { gl, meshProgramInfo } = initializeWorld("#canvas");
   loadGUI();
+  newLight();
+  console.log(lights);
 
   const href = 'http://localhost:8080/KayKit_City_Builder_Bits_1.0_FREE/Assets/obj/';
   const assets = [
@@ -139,11 +143,26 @@ async function main() {
     const camera = m4.lookAt(cameraPosition, cameraTarget, up);
     const view = m4.inverse(camera);
 
+    let positions = [];
+    let intensity = [];
+    let colors = [];
+    for (let i = 0; i < lights.length; i++){
+      positions = positions.concat([lights[i].lightPositionX, lights[i].lightPositionY, lights[i].lightPositionZ]);
+      intensity.push(lights[i].lightIntensity);
+      colors = colors.concat([lights[i].lightColors[0]/255, lights[i].lightColors[1]/255, lights[i].lightColors[2]/255]);
+
+    }
+
     const sharedUniforms = {
       u_lightDirection: m4.normalize([-1, 3, 5]),
       u_view: view,
       u_projection: projection,
       u_viewWorldPosition: cameraPosition,
+      u_lightPosition: positions,
+      u_contLight: lights.length,
+      u_intensity: intensity,
+      u_color: colors,
+      u_effect: effect ? 1 : 0,
     };
 
     gl.useProgram(meshProgramInfo.program);

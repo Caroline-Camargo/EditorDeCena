@@ -76,23 +76,31 @@ function buttonClick(i) {
     historyStack = [];
 }
 
-
 function saveScene() {
-    const saveParts = [];
+    const saveData = {
+        parts: [],
+        lights: [],
+    };
+
     for (let i = objArray.length; i < partsArray.length; i++) {
-        saveParts.push({config: partsArray[i].config, i: partsArray[i].i,});
+        saveData.parts.push({ config: partsArray[i].config, i: partsArray[i].i });
     }
 
-    const sceneJSON = JSON.stringify(saveParts);
-    
+    for (let i = 0; i < lights.length; i++) {
+        saveData.lights.push({ config: lights[i] });
+    }
+
+    const sceneJSON = JSON.stringify(saveData);
+
     const link = document.createElement('a');
     link.href = URL.createObjectURL(new Blob([sceneJSON], { type: 'application/json' }));
     link.download = 'scene.json';
-    
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 }
+
 
 function newConfig(config){
     let tempConfig = addConfig();
@@ -110,10 +118,10 @@ function newConfig(config){
     tempConfig.specular = config.specular;
     tempConfig.shininess = config.shininess;
     tempConfig.opacity = config.opacity;
-    tempConfig.diffuseMap = config.diffuseMap;
-    return tempConfig
+    tempConfig.diffuseMap = config.diffuseMap; 
+    return tempConfig;
 }
-  
+
 function loadScene() {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
@@ -122,22 +130,43 @@ function loadScene() {
     reader.onload = function (e) {
         const data = JSON.parse(e.target.result);
 
-        for (const jsonPartsArray of data) {
+        if (data.lights) {
+            i = 0;
+            for (const jsonLight of data.lights) {
+                if (i == 0){
+                    i++;
+                } else {
+                    let tempConfig = addLight();
+                    tempConfig.lightColors = jsonLight.config.lightColors;
+                    tempConfig.lightIntensity = jsonLight.config.lightIntensity;
+                    tempConfig.lightPositionX = jsonLight.config.lightPositionX;
+                    tempConfig.lightPositionY = jsonLight.config.lightPositionY;
+                    tempConfig.lightPositionZ = jsonLight.config.lightPositionZ;
+                    lights.push(tempConfig);
+                }
+            }
+        }
+
+        for (const jsonPartsArray of data.parts) {
             const { i, config } = jsonPartsArray;
             let tempConfig = newConfig(config);
-    
+
             partsArray.push({
                 bufferInfo: partsArray[i].bufferInfo,
                 vao: partsArray[i].vao,
-                material: {...partsArray[i].material},
+                material: { ...partsArray[i].material },
                 element: document.querySelector('#rightContent'),
                 config: tempConfig,
                 i: i
             });
         }
+
+        
     };
+
     reader.readAsText(file);
 }
+
 
 function backButtton() {
     if (partsArray.length <= objArray.length) {
@@ -185,4 +214,19 @@ function advanceButton() {
         config: tempConfig,
         i: tempObj.i
     });
+}
+
+function newLight(){
+    if (lights.length <= 5){
+        lights.push(addLight()); 
+    }  
+}
+
+function addEffect(){
+    if (effect){
+        effect = false;
+    } else {  
+        effect = true;
+    }
+    console.log(effect);
 }

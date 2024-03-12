@@ -1,6 +1,6 @@
 let gui = null;
 let contFolders = 0;
-
+let contLights = 0;
 
 const loadGUI = (num) => {
   if (gui == null) {
@@ -36,7 +36,6 @@ const addConfig = () => {
   return config
 };
 
-
 const addObjGUI = (obj, config) => {
   const rotate = obj.addFolder("rotate");
   rotate.add(config, "rotateX", 0, 20, 0.5);
@@ -61,4 +60,35 @@ const addObjGUI = (obj, config) => {
   texture.add(config, "shininess", 0, 1000);
   texture.add(config, "opacity", 0, 1);
   texture.add(config, "diffuseMap", ['defaultWhite', 'citybits_texture']);
+};
+
+
+
+const addLight = () => {
+    contLights++;
+
+    const config = {
+        lightPositionX: 0.0,
+        lightPositionY: 0.0,
+        lightPositionZ: 0.0,
+        lightIntensity: 0.1,
+        lightColors: [255, 255, 255]
+        }
+
+    
+    if (contLights > 1) {
+      const obj = gui.addFolder("Light " + (contLights - 1));
+      addLightGUI(obj, config);
+    } else{
+      config.lightColors = [0.0, 0.0, 0.0]
+    }
+    return config
+};
+
+const addLightGUI = (obj, config) => {
+    obj.add(config, "lightPositionX", -20, 20, 0.1);
+    obj.add(config, "lightPositionY", -20, 20, 0.1);
+    obj.add(config, "lightPositionZ", -20, 20, 0.1);
+    obj.add(config, "lightIntensity", 0.1, 1.0, 0.001);
+    obj.addColor(config, "lightColors");
 };
